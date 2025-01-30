@@ -1,37 +1,31 @@
-// import {VideoDBType} from './video-db-type'
+import { title } from 'process';
+import exp from "constants"
 
-import { realpathSync } from "fs"
-
-export type DBType = {
-    videos: any[]
-    // some: any[]
+type DBType = {
+    videos: any[],
+    blogs: any[]
 }
 
 export const db: DBType = {
-    videos: [
-        {
-            id: 0,
-            title: "Sample Video",
-            author: "John Doe",
-            canBeDownloaded: true,
-            minAgeRestriction: null,
-            createdAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
-            availableResolutions: ["P144"]
-        }
-    ]
-    // some: []
+    videos: [{id: 1, title: 'title'}],
+    blogs: []
 }
 
-//функция для быстрой очистки/заполнения базы данных для тестов
+//Partial - это встроенный тип, который создает новый тип на основе типа DBType, делая все его свойства необязательными.
+//Это значит, что любый свойства объекта DBType могут быть опущены.
 export const setDB = (dataset?: Partial<DBType>) => {
-    if (!dataset) { //если в фукнцию ничего не передано - то очищаем базу данных
+    if (!dataset) { //значит очищаем базу
         db.videos = []
-        // db.some = []
         return
     }
+    db.videos = dataset.videos || db.videos //заменяем старые значения новыми
+}
 
-    //если что-то передано - то заменяем старые значения новыми
-    db.videos = dataset.videos || db.videos
-    // db.some = dataset.some || db.some
+//---Generic
+type A = {
+    title: string
+}
+//чтобы не хардкодить string, мы можем использовать generic(обобщенный тип)
+type B<T> = {
+    value: T
 }

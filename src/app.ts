@@ -6,6 +6,7 @@ import { createVideoController } from './videos/createVideoController'
 import { findVideoController } from './videos/findVideoController'
 import { deleteVideoController } from './videos/deleteVideoController'
 import { videosRouter } from './videos'
+import { SETTINGS } from './settings';
 
 
 export const app = express() // создать приложение
@@ -16,15 +17,9 @@ app.get('/', (req, res) => {
     // эндпоинт, который будет показывать на верселе какая версия бэкэнда сейчас залита
     res.status(200).json({version: '1.0'})
 })
-
-app.get('/videos', (req,res) => {
-    const videos = db.videos
-    res.status(200).json(videos)
-})
-
 app.use('/videos', videosRouter)
 
-// app.get(SETTINGS.PATH.VIDEOS, getVideosController)
+app.get(SETTINGS.PATH.VIDEOS, getVideosController)
 // app.use(SETTINGS.PATH.VIDEOS, videosRouter)
 
 
