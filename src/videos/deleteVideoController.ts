@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { db } from "../db/db"
+import { db } from "../db/db";
 
 export const deleteVideoController = (req: Request, res: Response) => {
     const { id } = req.params; //получаем id видео из параметров пути
@@ -7,4 +7,5 @@ export const deleteVideoController = (req: Request, res: Response) => {
 
     db.videos.splice(videoIndex, 1)
     res.sendStatus(200).json({ message: "Video deleted successfully" })
+    return;
 }
