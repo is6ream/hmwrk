@@ -7,5 +7,6 @@ const deleteVideoController = (req, res) => {
     const videoIndex = db_1.db.videos.findIndex((video) => video.id = id);
     db_1.db.videos.splice(videoIndex, 1);
     res.sendStatus(200).json({ message: "Video deleted successfully" });
+    return;
 };
 exports.deleteVideoController = deleteVideoController;

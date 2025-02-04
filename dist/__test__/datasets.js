@@ -13,5 +13,6 @@ exports.video1 /*VideoDBType*/ = {
     // availableResolution: [Resolutions.P240],
 };
 exports.dataset1 = {
-    videos: [exports.video1]
+    videos: [exports.video1],
+    blogs: []
 };

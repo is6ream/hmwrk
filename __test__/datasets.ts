@@ -16,5 +16,6 @@ export const video1: any /*VideoDBType*/ = {
 }
 
 export const dataset1: DBType = {
-    videos: [video1]
+    videos: [video1],
+    blogs: []
 }

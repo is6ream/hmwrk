@@ -1,12 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getVideosController = void 0;
-const db_1 = require("../db/db");
+const videos = [
+    {
+        id: 0,
+        title: "string",
+        author: "string",
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        createdAt: new Date().toISOString(),
+        publicationDate: new Date().toISOString(),
+        availableResolutions: ["P144"]
+    }
+];
 const getVideosController = (req, res) => {
-    const videos = db_1.db.videos; // получаем видео из базы данных
-    res
-        .status(200)
-        .json(videos); // отдаём видео в качестве ответа
+    res.status(200).json(videos);
 };
 exports.getVideosController = getVideosController;
-// не забудьте добавить эндпоинт в апп
+//нужно ли прописать перечень данных здесь, или они должны быть отдельно в бд?

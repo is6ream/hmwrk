@@ -1,7 +1,7 @@
 import { error } from 'console';
 import { title } from 'process';
 import { Request, Response } from "express";
-
+import { RESOLUTIONS } from '../settings';
 export type ParamType = {
     id: string
 }
@@ -16,21 +16,38 @@ export type QueryType = {
 }
 
 export type OutputErrorsType = {
-    errorCode: number
-    errorMessage: string
+    errorMessage: {
+        errorCode: number
+        errorMessage: string
+    }[]
+   
 }
 
 export type OutputVideoType = {
     id: number
     title: string
-    url: string
+    author: string
+    canBeDownloaded: boolean
+    minAgeRestriction: number | null
+    createdAt: string
+    publicationDate: string
+    availableResolutions: RESOLUTIONS[]
+
 }
 
-export type OutputType = void | OutputErrorsType | OutputVideoType 
+export type inputVideoType = {
+    title: string
+    author: string
+    availableReolution: [
+        string //???
+    ]
+}
 
-export const someController = (
+export type OutputType = void | OutputErrorsType | OutputVideoType
+
+export const someController = ( //и для чего это нужно
     req: Request<ParamType, OutputType, BodyType, QueryType>,
     res: Response<OutputType>
 ) => {
-//что здесь должно быть
+    //что здесь должно быть
 }

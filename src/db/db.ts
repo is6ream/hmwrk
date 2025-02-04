@@ -1,13 +1,20 @@
 import { title } from 'process';
 import exp from "constants"
 
-type DBType = {
+export type DBType = {
     videos: any[],
     blogs: any[]
 }
 
 export const db: DBType = {
-    videos: [{id: 1, title: 'title'}],
+    videos: [{ id: 1, title: 'title' },
+    { id: 2, title: 'my first video' },
+    {
+        id: 3,
+        author: "PewDiePie",
+        resolution: '720'
+    }],
+
     blogs: []
 }
 
