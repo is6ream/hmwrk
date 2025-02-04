@@ -23,6 +23,21 @@ exports.app.get('/hometask_01/api/videos/:id', (req, res) => {
     }
     res.json(findVideo);
 });
+exports.app.put('/hometask_01/api/videos/:id', (req, res) => {
+    var _a;
+    const videoId = Number(req.params.id);
+    const findVideo = db_1.db.videos.find(video => video.id === videoId);
+    if (findVideo) {
+        findVideo.title = req.body.title || findVideo.title;
+        findVideo.author = req.body.author || findVideo.author;
+        findVideo.availableResolutions = req.body.availableResolutions || findVideo.availableResolutions;
+        findVideo.canBeDownloaded = (_a = req.body.canBeDownloaded) !== null && _a !== void 0 ? _a : findVideo.canBeDownloaded;
+        findVideo.minAgeRestriction = req.body.minAgeRestriction || findVideo.minAgeRestriction;
+        res.status(200).json(findVideo);
+        return;
+    }
+    res.status(404).json({ "message": "Видео не найдено" });
+});
 exports.app.delete('/hometask_01/api/videos/:id', (req, res) => {
     for (let i = 0; i < db_1.db.videos.length; i++) {
         if (db_1.db.videos[i].id === +req.params.id) {
@@ -51,7 +66,7 @@ const inputValidation = (video) => {
 };
 exports.app.post('/hometask_01/api/videos', (req, res) => {
     const newVideo = {
-        id: Date.now() + Math.random(),
+        id: +Date.now() + Math.random(),
         title: req.body.title,
         author: req.body,
         availableResolutions: [],
