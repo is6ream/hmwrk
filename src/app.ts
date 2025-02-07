@@ -1,10 +1,11 @@
 import { db } from './db/db';
 import express from 'express'
 import cors from 'cors'
-import { SETTINGS, RESOLUTIONS, STATUSES } from './settings';
+import { SETTINGS, STATUSES } from './settings';
 import { OutputVideoType, ParamType, BodyType, OutputErrorsType, inputVideoType } from './videos/some';
 import { Request, Response } from 'express';
 import { getVideosController } from './videos/getVideosController';
+import { RESOLUTIONS } from './input-output-types/video-types';
 
 
 

@@ -8,6 +8,8 @@ const db_1 = require("./db/db");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const settings_1 = require("./settings");
+const getVideosController_1 = require("./videos/getVideosController");
+const video_types_1 = require("./input-output-types/video-types");
 exports.app = (0, express_1.default)(); // создать приложение
 exports.app.use(express_1.default.json()); // создание свойств-объектов body и query во всех реквестах
 exports.app.use((0, cors_1.default)()); // разрешить любым фронтам делать запросы на наш бэк
@@ -59,7 +61,7 @@ const inputValidation = (video) => {
         errors.errorMessages.push({ message: 'invalid author', field: 'author' });
     }
     if (!Array.isArray(video.availableResolutions) ||
-        video.availableResolutions.find(p => !settings_1.RESOLUTIONS[p])) {
+        video.availableResolutions.find(p => !video_types_1.RESOLUTIONS[p])) {
         errors.errorMessages.push({ message: "invalid resolutions", field: "available resolution" });
     }
     return errors;
@@ -73,7 +75,8 @@ exports.app.post('/hometask_01/api/videos', (req, res) => {
         return;
     }
     const date = new Date();
-    const newVideo = Object.assign(Object.assign({}, req.body), { id: +Date.now() + Math.random(), title: req.body.title, author: req.body.author, availableResolutions: settings_1.RESOLUTIONS, canBeDownloaded: false, minAgeRestriction: null, createdAt: date.toISOString(), publicationDate: new Date(date.setDate(date.getDate() + 1)) });
+    const newVideo = Object.assign(Object.assign({}, req.body), { id: +Date.now() + Math.random(), title: req.body.title, author: req.body.author, availableResolutions: video_types_1.RESOLUTIONS, canBeDownloaded: false, minAgeRestriction: null, createdAt: date.toISOString(), publicationDate: new Date(date.setDate(date.getDate() + 1)) });
     db_1.db.videos = [...db_1.db.videos, newVideo];
     res.status(settings_1.STATUSES.CREATED_201).json(newVideo);
 });
+exports.app.get(settings_1.SETTINGS.PATH.VIDEOS, getVideosController_1.getVideosController);

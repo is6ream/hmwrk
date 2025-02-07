@@ -2,7 +2,6 @@
 
 export type DBType = {
     videos: any[],
-    blogs: any[]
 }
 
 export const db: DBType = {
@@ -16,8 +15,6 @@ export const db: DBType = {
         createdAt: null,
         publicationDate: null
     }],
-
-    blogs: []
 }
 
 //Partial - это встроенный тип, который создает новый тип на основе типа DBType, делая все его свойства необязательными.
