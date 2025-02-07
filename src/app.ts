@@ -4,6 +4,7 @@ import cors from 'cors'
 import { SETTINGS, RESOLUTIONS, STATUSES } from './settings';
 import { OutputVideoType, ParamType, BodyType, OutputErrorsType, inputVideoType } from './videos/some';
 import { Request, Response } from 'express';
+import { getVideosController } from './videos/getVideosController';
 
 
 
@@ -102,3 +103,5 @@ app.post('/hometask_01/api/videos', (req: Request, res: Response) => {
     res.status(STATUSES.CREATED_201).json(newVideo)
 })
 
+
+app.get(SETTINGS.PATH.VIDEOS, getVideosController)

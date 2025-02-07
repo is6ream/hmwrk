@@ -6,12 +6,15 @@ export type DBType = {
 }
 
 export const db: DBType = {
-    videos: [{ id: 1, title: 'title' },
-    { id: 2, title: 'my first video' },
-    {
-        id: 3,
-        author: "PewDiePie",
-        resolution: '720'
+    videos: [{
+        id: 1,
+        title: 'Barca - Juve',
+        author: 'Champions league',
+        availableResolutions: [],
+        canBeDownloaded: false,
+        minAgeRestriction: null,
+        createdAt: null,
+        publicationDate: null
     }],
 
     blogs: []
