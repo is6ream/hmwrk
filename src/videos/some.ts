@@ -1,5 +1,3 @@
-import { error } from 'console';
-import { title } from 'process';
 import { Request, Response } from "express";
 import { RESOLUTIONS } from '../settings';
 export type ParamType = {
@@ -16,11 +14,11 @@ export type QueryType = {
 }
 
 export type OutputErrorsType = {
-    errorMessage: {
-        errorCode: number
-        errorMessage: string
+    errorMessages: {
+        message: string
+        field: string
     }[]
-   
+
 }
 
 export type OutputVideoType = {
@@ -38,9 +36,7 @@ export type OutputVideoType = {
 export type inputVideoType = {
     title: string
     author: string
-    availableReolution: [
-        string //???
-    ]
+    availableResolutions: string[]
 }
 
 export type OutputType = void | OutputErrorsType | OutputVideoType

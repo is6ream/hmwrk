@@ -1,10 +1,10 @@
-import { title } from 'process';
 import { db } from './db/db';
 import express from 'express'
 import cors from 'cors'
 import { SETTINGS, RESOLUTIONS, STATUSES } from './settings';
-import { OutputVideoType, ParamType, BodyType } from './videos/some';
+import { OutputVideoType, ParamType, BodyType, OutputErrorsType, inputVideoType } from './videos/some';
 import { Request, Response } from 'express';
+
 
 
 export const app = express() // создать приложение
@@ -47,54 +47,58 @@ app.delete('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
     for (let i = 0; i < db.videos.length; i++) {
         if (db.videos[i].id === +req.params.id) {
             db.videos.splice(i, 1)
-            res.send(STATUSES.NO_CONTENT_204)
+            res.status(STATUSES.NO_CONTENT_204)
             return;
         }
     }
-    res.send(STATUSES.NOT_FOUND_404)
+    res.status(STATUSES.NOT_FOUND_404)
 });
 
-const inputValidation = (video: any) => {
-    const errors = [] as { message: string, field: string}[];
-
-    if (!video.title || typeof video.title !== 'string' || video.title.trim().length < 1 || video.title.legth > 40) {
-        errors.push({ message: 'Title must be a non-empty string with max 40 characters', field: 'title' })
+const inputValidation = (video: inputVideoType) => {
+    const errors: OutputErrorsType = {
+        errorMessages: []
     }
 
-    if (!video.author || typeof video.author !== 'string' || video.title.trim().length < 1 || video.title.length > 20) {
-        errors.push({ message: 'Author must be a non empty string with max 20 charachters', field: 'author' })
-    };
-
-    const values = Object.values(RESOLUTIONS)
-    if (!Array.isArray(video.availableResolution) ||
-        video.availableResolution.some((res: any) => !values.includes(res))) {
-        errors.push({ message: 'Invalid resolutions', field: 'available resolutions' })
+    if (!video.title || typeof video.title !== 'string' || video.title.trim().length === 0 || video.title.length > 40) {
+        errors.errorMessages.push({ message: 'invalid title', field: 'title' })
     }
-    return errors;
+
+    if (!video.author || typeof video.author !== 'string' || video.author.trim().length === 0 || video.author.length > 20) {
+        errors.errorMessages.push({ message: 'invalid author', field: 'author' })
+    }
+
+    if (!Array.isArray(video.availableResolutions) ||
+        video.availableResolutions.find(p => !RESOLUTIONS[p as keyof typeof RESOLUTIONS])) {
+        errors.errorMessages.push({ message: "invalid resolutions", field: "available resolution" })
+    }
+    return errors
 }
+
 
 app.post('/hometask_01/api/videos', (req: Request, res: Response) => {
     const errors = inputValidation(req.body)
-    if (errors.length) {
+    if (errors.errorMessages.length) {
         res
             .status(STATUSES.BAD_REQUEST_400)
             .json(errors)
         return
+
     }
+    const date = new Date()
     const newVideo = {
         ...req.body,
         id: +Date.now() + Math.random(),
         title: req.body.title,
-        author: req.body,
-        availableResolutions: [],
+        author: req.body.author,
+        availableResolutions: RESOLUTIONS,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date().toISOString(),
-        publicationDate: new Date().toISOString()//здесь нужно доработать
+        createdAt: date.toISOString(),
+        publicationDate: new Date(date.setDate(date.getDate() + 1))
     }
 
     db.videos = [...db.videos, newVideo]
 
-    res.send(STATUSES.OK_200).json(newVideo)
+    res.status(STATUSES.CREATED_201).json(newVideo)
 })
 

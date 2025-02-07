@@ -26,7 +26,7 @@
   },
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon --inspect dist/index.js",
+    "dev": "nodemon dist/index.js",
     "jest": "jest -i",
     "jest:coverage": "jest -i --coverage"
   }

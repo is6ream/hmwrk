@@ -13,13 +13,13 @@ exports.app.use(express_1.default.json()); // создание свойств-о
 exports.app.use((0, cors_1.default)()); // разрешить любым фронтам делать запросы на наш бэк
 exports.app.get('/hometask_01/api/videos', (req, res) => {
     const videos = db_1.db.videos;
-    res.status(200).json(videos);
+    res.status(settings_1.STATUSES.OK_200).json(videos);
 });
 exports.app.get('/hometask_01/api/videos/:id', (req, res) => {
     const videoId = Number(req.params.id);
     const findVideo = db_1.db.videos.find(video => video.id === videoId);
     if (!findVideo) {
-        res.status(404).json({ message: 'Не найдено' });
+        res.status(settings_1.STATUSES.NOT_FOUND_404).json({ message: 'Не найдено' });
     }
     res.json(findVideo);
 });
@@ -33,48 +33,47 @@ exports.app.put('/hometask_01/api/videos/:id', (req, res) => {
         findVideo.availableResolutions = req.body.availableResolutions || findVideo.availableResolutions;
         findVideo.canBeDownloaded = (_a = req.body.canBeDownloaded) !== null && _a !== void 0 ? _a : findVideo.canBeDownloaded;
         findVideo.minAgeRestriction = req.body.minAgeRestriction || findVideo.minAgeRestriction;
-        res.status(200).json(findVideo);
+        res.status(settings_1.STATUSES.OK_200).json(findVideo);
         return;
     }
-    res.status(404).json({ "message": "Видео не найдено" });
+    res.status(settings_1.STATUSES.NOT_FOUND_404).json({ "message": "Видео не найдено" });
 });
 exports.app.delete('/hometask_01/api/videos/:id', (req, res) => {
     for (let i = 0; i < db_1.db.videos.length; i++) {
         if (db_1.db.videos[i].id === +req.params.id) {
             db_1.db.videos.splice(i, 1);
-            res.send(204);
+            res.status(settings_1.STATUSES.NO_CONTENT_204);
             return;
         }
     }
-    res.send(404);
+    res.status(settings_1.STATUSES.NOT_FOUND_404);
 });
 const inputValidation = (video) => {
-    const errors = [];
-    if (!video.title || typeof video.title !== 'string' || video.title.trim().length < 1 || video.title.legth > 40) {
-        errors.push({ message: 'Title must be a non-empty string with max 40 characters', field: 'title' });
+    const errors = {
+        errorMessages: []
+    };
+    if (!video.title || typeof video.title !== 'string' || video.title.trim().length === 0 || video.title.length > 40) {
+        errors.errorMessages.push({ message: 'invalid title', field: 'title' });
     }
-    if (!video.author || typeof video.author !== 'string' || video.title.trim().length < 1 || video.title.length > 20) {
-        errors.push({ message: 'Author must be a non empty string with max 20 charachters', field: 'author' });
+    if (!video.author || typeof video.author !== 'string' || video.author.trim().length === 0 || video.author.length > 20) {
+        errors.errorMessages.push({ message: 'invalid author', field: 'author' });
     }
-    ;
-    const values = Object.values(settings_1.RESOLUTIONS);
-    if (!Array.isArray(video.availableResolution) ||
-        video.availableResolution.some((res) => !values.includes(res))) {
-        errors.push({ message: 'Invalid resolutions', field: 'available resolutions' });
+    if (!Array.isArray(video.availableResolutions) ||
+        video.availableResolutions.find(p => !settings_1.RESOLUTIONS[p])) {
+        errors.errorMessages.push({ message: "invalid resolutions", field: "available resolution" });
     }
     return errors;
 };
 exports.app.post('/hometask_01/api/videos', (req, res) => {
-    const newVideo = {
-        id: +Date.now() + Math.random(),
-        title: req.body.title,
-        author: req.body,
-        availableResolutions: [],
-        canBeDownloaded: false,
-        minAgeRestriction: null,
-        createdAt: new Date().toISOString(),
-        publicationDate: new Date().toISOString() //здесь нужно доработать
-    };
-    db_1.db.videos.push(newVideo);
-    res.send(201).json(newVideo);
+    const errors = inputValidation(req.body);
+    if (errors.errorMessages.length) {
+        res
+            .status(settings_1.STATUSES.BAD_REQUEST_400)
+            .json(errors);
+        return;
+    }
+    const date = new Date();
+    const newVideo = Object.assign(Object.assign({}, req.body), { id: +Date.now() + Math.random(), title: req.body.title, author: req.body.author, availableResolutions: settings_1.RESOLUTIONS, canBeDownloaded: false, minAgeRestriction: null, createdAt: date.toISOString(), publicationDate: new Date(date.setDate(date.getDate() + 1)) });
+    db_1.db.videos = [...db_1.db.videos, newVideo];
+    res.status(settings_1.STATUSES.CREATED_201).json(newVideo);
 });
