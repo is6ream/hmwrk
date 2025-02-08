@@ -14,12 +14,6 @@ app.use(express.json()) // создание свойств-объектов body
 app.use(cors()) // разрешить любым фронтам делать запросы на наш бэк
 
 
-
-app.get('/hometask_01/api/videos', (req: Request, res: Response) => {
-    const videos = db.videos
-    res.status(STATUSES.OK_200).json(videos)
-})
-
 app.get('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
     const videoId = Number(req.params.id);
     const findVideo = db.videos.find(video => video.id === videoId)
@@ -56,7 +50,7 @@ app.delete('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
     res.status(STATUSES.NOT_FOUND_404)
 });
 
-const inputValidation = (video: inputVideoType) => {
+export const inputValidation = (video: inputVideoType) => {
     const errors: OutputErrorsType = {
         errorMessages: []
     }

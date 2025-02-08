@@ -13,10 +13,6 @@ const video_types_1 = require("./input-output-types/video-types");
 exports.app = (0, express_1.default)(); // создать приложение
 exports.app.use(express_1.default.json()); // создание свойств-объектов body и query во всех реквестах
 exports.app.use((0, cors_1.default)()); // разрешить любым фронтам делать запросы на наш бэк
-exports.app.get('/hometask_01/api/videos', (req, res) => {
-    const videos = db_1.db.videos;
-    res.status(settings_1.STATUSES.OK_200).json(videos);
-});
 exports.app.get('/hometask_01/api/videos/:id', (req, res) => {
     const videoId = Number(req.params.id);
     const findVideo = db_1.db.videos.find(video => video.id === videoId);
