@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RESOLUTIONS } from '../settings';
+import { RESOLUTIONS } from '../input-output-types/video-types';
 export type ParamType = {
     id: string
 }
@@ -34,7 +34,7 @@ export type OutputVideoType = {
 }
 
 export type inputVideoType = {
-    title: string
+    title : string
     author: string
     availableResolutions: string[]
 }

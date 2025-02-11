@@ -1,3 +1,4 @@
+import { RESOLUTIONS } from './../src/input-output-types/video-types';
 // import {VideoDBType} from '../src/db/video-db-type'
 // import {Resolutions} from '../src/input-output-types/video-types'
 import { DBType } from '../src/db/db'
@@ -12,7 +13,7 @@ export const video1: any /*VideoDBType*/ = {
     minAgeRestriction: null,
     createdAt: new Date().toISOString(),
     publicationDate: new Date().toISOString(),
-    availableResolution: [Resolutions.P240],
+    availableResolution: [RESOLUTIONS.P240],
 }
 
 // ...

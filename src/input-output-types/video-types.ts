@@ -9,7 +9,7 @@ export enum RESOLUTIONS {
     P2160 = "P2160",
 }
 
-export type RESOLUTIONSString = keyof typeof RESOLUTIONS
+export type RESOLUTIONSstring = keyof typeof RESOLUTIONS
 
 export type OutputVideoType = {
     id: number
@@ -19,11 +19,11 @@ export type OutputVideoType = {
     minAgeRestriction: null
     createdAt: string
     publicationDate: string
-    availableResolution: RESOLUTIONS[]
+    availableResolutions: RESOLUTIONS[]
 }
 
 export type InputVideoType = {
     title: string
     author: string
-    availableResolution: RESOLUTIONS[]
+    availableResolutions: RESOLUTIONS[]
 }
