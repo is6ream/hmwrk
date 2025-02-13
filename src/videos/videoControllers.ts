@@ -20,8 +20,10 @@ const inputValidation = (video: InputVideoType) => {
     if (!Array.isArray(video.availableResolutions) ||
         video.availableResolutions.find((p: RESOLUTIONSstring) => !RESOLUTIONS[p as keyof typeof RESOLUTIONS])) {
         errors.errorMessages.push({ message: "invalid resolutions", field: "resolutions" })
+        console.log(errors)
     }
     return errors;
+
 }
 
 export const videoControllers = {
@@ -77,11 +79,11 @@ export const videoControllers = {
             id: Date.now() + Math.random(),
             title: req.body.title,
             author: req.body.author,
-            availableResolutions: ["P144"],
             canBeDownloaded: false,
             minAgeRestriction: null,
             createdAt: date.toISOString(),
-            publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString()
+            publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
+            availableResolutions: ["P144"]
         }
         db.videos.push(newVideo)
         res.status(201).json(newVideo)

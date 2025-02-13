@@ -16,6 +16,7 @@ const inputValidation = (video) => {
     if (!Array.isArray(video.availableResolutions) ||
         video.availableResolutions.find((p) => !video_types_1.RESOLUTIONS[p])) {
         errors.errorMessages.push({ message: "invalid resolutions", field: "resolutions" });
+        console.log(errors);
     }
     return errors;
 };
@@ -58,7 +59,7 @@ exports.videoControllers = {
             return;
         }
         const date = new Date();
-        const newVideo = Object.assign(Object.assign({}, req.body), { id: Date.now() + Math.random(), title: req.body.title, author: req.body.author, availableResolutions: ["P144"], canBeDownloaded: false, minAgeRestriction: null, createdAt: date.toISOString(), publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString() });
+        const newVideo = Object.assign(Object.assign({}, req.body), { id: Date.now() + Math.random(), title: req.body.title, author: req.body.author, canBeDownloaded: false, minAgeRestriction: null, createdAt: date.toISOString(), publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(), availableResolutions: ["P144"] });
         db_1.db.videos.push(newVideo);
         res.status(201).json(newVideo);
     }),
