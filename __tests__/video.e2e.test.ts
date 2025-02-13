@@ -1,3 +1,4 @@
+import { STATUSES } from './../src/settings';
 import { agent } from 'supertest';
 import { dataset1, dataset2 } from './datasets';
 import { req } from './test-helpers'
@@ -75,6 +76,24 @@ describe('/videos', () => {
 
         expect(updatingVideo.body.title).toEqual('good new title')
         expect(updatingVideo.body.author).toEqual('Jeff Bezos')
+    })
+
+    it('should delete videos by id', async () => {
+        setDB()
+
+        const videoToDelete = await req
+            .post('/hometask_01/api/videos')
+            .send(dataset1.videos)
+            .expect(201)
+
+        const videoId = videoToDelete.body.id
+        const deleteVideo = await req
+            .delete(`/hometask_01/api/videos/${videoId}`)
+            .expect(204)
+
+        const gettingAnEmptyArray = await req
+            .get(`/hometask_01/api/videos/${videoId}`)
+            .expect(404)
     })
 
 })

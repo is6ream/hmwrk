@@ -8,6 +8,7 @@ videosRouter.get('/', videoControllers.getVideosController)
 videosRouter.post('/', videoControllers.createVideoController)
 videosRouter.get('/:id', videoControllers.findVideoController)
 videosRouter.delete('/:id', videoControllers.deleteVideoController)
+videosRouter.delete('/', videoControllers.deleteVideoController)
 videosRouter.put('/:id', videoControllers.updateVideoController)
 
 

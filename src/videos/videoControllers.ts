@@ -62,6 +62,8 @@ export const videoControllers = {
         }
     }),
 
+    
+
     createVideoController: ((req: Request, res: Response) => {
         const errors = inputValidation(req.body)
         if (errors.errorMessages.length) {
