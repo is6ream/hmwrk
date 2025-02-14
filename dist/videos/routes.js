@@ -8,4 +8,5 @@ exports.videosRouter.get('/', videoControllers_1.videoControllers.getVideosContr
 exports.videosRouter.post('/', videoControllers_1.videoControllers.createVideoController);
 exports.videosRouter.get('/:id', videoControllers_1.videoControllers.findVideoController);
 exports.videosRouter.delete('/:id', videoControllers_1.videoControllers.deleteVideoController);
+exports.videosRouter.delete('/', videoControllers_1.videoControllers.deleteVideoController);
 exports.videosRouter.put('/:id', videoControllers_1.videoControllers.updateVideoController);

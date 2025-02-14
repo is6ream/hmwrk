@@ -35,6 +35,34 @@ export const videoControllers = {
             .json(videos)
     }),
 
+
+    createVideoController: ((req: Request, res: Response) => {
+        const errors = inputValidation(req.body)
+        if (errors.errorMessages.length) {
+            res
+                .status(400)
+                .json(errors)
+            return;
+        }
+
+        const date = new Date();
+        const newVideo: any = {
+            ...req.body,
+
+            id: Date.now() + Math.random(),
+            title: req.body.title,
+            author: req.body.author,
+            canBeDownloaded: false,
+            minAgeRestriction: null,
+            createdAt: date.toISOString(),
+            publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
+            availableResolutions: ["P144"]
+        }
+        db.videos.push(newVideo)
+        res.status(201).json(newVideo)
+    }),
+
+
     findVideoController: ((req: Request, res: Response) => {
         const videoId = +req.params.id
         const findVideo = db.videos.find(video => video.id === videoId)
@@ -62,34 +90,7 @@ export const videoControllers = {
         }
     }),
 
-    
 
-    createVideoController: ((req: Request, res: Response) => {
-        const errors = inputValidation(req.body)
-        if (errors.errorMessages.length) {
-            res
-                .status(400)
-                .json(errors)
-            return;
-
-        }
-
-        const date = new Date();
-        const newVideo: any = {
-            ...req.body,
-
-            id: Date.now() + Math.random(),
-            title: req.body.title,
-            author: req.body.author,
-            canBeDownloaded: false,
-            minAgeRestriction: null,
-            createdAt: date.toISOString(),
-            publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
-            availableResolutions: ["P144"]
-        }
-        db.videos.push(newVideo)
-        res.status(201).json(newVideo)
-    }),
 
     updateVideoController: ((req: Request, res: Response) => {
         let videoId = db.videos.find(v => v.id === + req.params.id)
@@ -101,7 +102,7 @@ export const videoControllers = {
                 videoId.minAgeRestriction = req.body.minAgeRestriction,
                 videoId.createdAt = req.body.createdAt,
                 videoId.publicationDate = req.body.publicationDate
-
+                
             res.send(videoId)
         } else {
             res.send(404)

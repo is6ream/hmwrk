@@ -1,16 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setDB = exports.db = void 0;
+const date = new Date();
 exports.db = {
     videos: [{
-            id: 1,
+            id: 0,
             title: 'Barca - Juve',
             author: 'Champions league',
-            availableResolutions: [],
-            canBeDownloaded: false,
+            canBeDownloaded: true,
             minAgeRestriction: null,
-            createdAt: null,
-            publicationDate: null
+            createdAt: date.toISOString(),
+            publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
+            availableResolutions: [
+                "P144"
+            ]
         }],
 };
 //Partial - это встроенный тип, который создает новый тип на основе типа DBType, делая все его свойства необязательными.

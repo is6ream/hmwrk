@@ -4,16 +4,20 @@ export type DBType = {
     videos: any[],
 }
 
+const date = new Date();
+
 export const db: DBType = {
     videos: [{
-        id: 1,
+        id: 0,
         title: 'Barca - Juve',
         author: 'Champions league',
-        availableResolutions: [],
-        canBeDownloaded: false,
+        canBeDownloaded: true,
         minAgeRestriction: null,
-        createdAt: null,
-        publicationDate: null
+        createdAt: date.toISOString(),
+        publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
+        availableResolutions: [
+            "P144"
+        ]
     }],
 }
 
@@ -28,7 +32,7 @@ export const setDB = (dataset?: Partial<DBType>) => {
 }
 
 //---Generic
-type A = {
+export type A = {
     title: string
 }
 //чтобы не хардкодить string, мы можем использовать generic(обобщенный тип)

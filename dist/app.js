@@ -11,4 +11,3 @@ exports.app = (0, express_1.default)(); // создать приложение
 exports.app.use(express_1.default.json()); // создание свойств-объектов body и query во всех реквестах
 exports.app.use((0, cors_1.default)()); // разрешить любым фронтам делать запросы на наш бэк
 exports.app.use('/hometask_01/api/videos/', routes_1.videosRouter);
-//нужно разобраться с эндпоинтами delete запроса и перейти к тестам\

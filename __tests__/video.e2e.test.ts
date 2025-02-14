@@ -70,15 +70,24 @@ describe('/videos', () => {
             .put(`/hometask_01/api/videos/${videoId}`)
             .send({
                 title: "good new title",
-                author: "Jeff Bezos"
+                author: "Jeff Bezos",
+                availableResolutions: [
+                    "P144"
+                ],
+                canBeDownloaded: true,
+                minAgeRestriction: 18,
+                publicationDate: new Date().toISOString()
             })
             .expect(200)
 
         expect(updatingVideo.body.title).toEqual('good new title')
         expect(updatingVideo.body.author).toEqual('Jeff Bezos')
+        expect(updatingVideo.body.availableResolutions).toEqual(["P144"])
+        expect(updatingVideo.body.canBeDownloaded).toEqual(true)
+        expect(updatingVideo.body.minAgeRestriction).toEqual(18)
     })
 
-    it('should delete videos by id', async () => {
+    it('should delete video by id', async () => {
         setDB()
 
         const videoToDelete = await req
@@ -97,3 +106,10 @@ describe('/videos', () => {
     })
 
 })
+
+const menu = {
+    analytics: {
+        bussiness: 'Для бизнеса',
+        data: 'Big Data'
+    }
+}
