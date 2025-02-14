@@ -9,9 +9,10 @@ app.use(express.json()) // создание свойств-объектов body
 app.use(cors()) // разрешить любым фронтам делать запросы на наш бэк
 
 
-app.get('/', (req, res) => {
+app.get('/hometask_01/', (req, res) => {
     res.status(200).json({ version: "1.0" })
 })
+
 app.use('/hometask_01/api/videos/', videosRouter);
 
 
