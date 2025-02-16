@@ -27,6 +27,12 @@ const inputValidation = (video: InputVideoType) => {
 }
 
 export const videoControllers = {
+
+    
+    deleteVideoController: ((req: Request, res: Response) => {
+
+    }),
+    
     getVideosController: ((req: Request, res: Response<any /*OutputVideoType*/>) => {
         const videos = db.videos
 
@@ -74,24 +80,6 @@ export const videoControllers = {
         res.json(findVideo)
     }),
 
-    deleteVideoController: ((req: Request, res: Response) => {
-        let videoFound = false; //флаг, чтобы проверить нашли ли мы видео
-        for (let i = 0; i < db.videos.length; i++) {
-            if (db.videos[i].id === +req.params.id) {
-                db.videos.splice(i, 1)
-                res.status(204).send();
-                videoFound = true
-                break;
-            }
-        }
-
-        if (!videoFound) {
-            res.status(404).send({ message: 'Видео не найдено' })
-        }
-    }),
-
-
-
     updateVideoController: ((req: Request, res: Response) => {
         let videoId = db.videos.find(v => v.id === + req.params.id)
         if (videoId) {
@@ -102,7 +90,7 @@ export const videoControllers = {
                 videoId.minAgeRestriction = req.body.minAgeRestriction,
                 videoId.createdAt = req.body.createdAt,
                 videoId.publicationDate = req.body.publicationDate
-                
+
             res.send(videoId)
         } else {
             res.send(404)
