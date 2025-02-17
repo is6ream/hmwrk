@@ -21,6 +21,10 @@ const inputValidation = (video) => {
     return errors;
 };
 exports.videoControllers = {
+    deleteVideosController: ((req, res) => {
+        db_1.db.videos = [];
+        res.status(204).send();
+    }),
     getVideosController: ((req, res) => {
         const videos = db_1.db.videos;
         res
@@ -29,6 +33,7 @@ exports.videoControllers = {
     }),
     createVideoController: ((req, res) => {
         const errors = inputValidation(req.body);
+        console.log("Ошибка валидации: ", errors);
         if (errors.errorMessages.length) {
             res
                 .status(400)
@@ -38,6 +43,7 @@ exports.videoControllers = {
         const date = new Date();
         const newVideo = Object.assign(Object.assign({}, req.body), { id: Date.now() + Math.random(), title: req.body.title, author: req.body.author, canBeDownloaded: false, minAgeRestriction: null, createdAt: date.toISOString(), publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(), availableResolutions: ["P144"] });
         db_1.db.videos.push(newVideo);
+        console.log(newVideo);
         res.status(201).json(newVideo);
     }),
     findVideoController: ((req, res) => {
@@ -48,20 +54,6 @@ exports.videoControllers = {
                 .json({ message: 'Не найдено' });
         }
         res.json(findVideo);
-    }),
-    deleteVideoController: ((req, res) => {
-        let videoFound = false; //флаг, чтобы проверить нашли ли мы видео
-        for (let i = 0; i < db_1.db.videos.length; i++) {
-            if (db_1.db.videos[i].id === +req.params.id) {
-                db_1.db.videos.splice(i, 1);
-                res.status(204).send();
-                videoFound = true;
-                break;
-            }
-        }
-        if (!videoFound) {
-            res.status(404).send({ message: 'Видео не найдено' });
-        }
     }),
     updateVideoController: ((req, res) => {
         let videoId = db_1.db.videos.find(v => v.id === +req.params.id);

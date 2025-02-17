@@ -28,14 +28,13 @@ const inputValidation = (video: InputVideoType) => {
 
 export const videoControllers = {
 
-    
-    deleteVideoController: ((req: Request, res: Response) => {
-
+    deleteVideosController: ((req: Request, res: Response) => {
+        db.videos = [];
+        res.status(204).send()
     }),
-    
-    getVideosController: ((req: Request, res: Response<any /*OutputVideoType*/>) => {
-        const videos = db.videos
 
+    getVideosController: ((req: Request, res: Response<any>) => {
+        const videos = db.videos
         res
             .status(200)
             .json(videos)
@@ -44,6 +43,7 @@ export const videoControllers = {
 
     createVideoController: ((req: Request, res: Response) => {
         const errors = inputValidation(req.body)
+        console.log("Ошибка валидации: ", errors)
         if (errors.errorMessages.length) {
             res
                 .status(400)
@@ -65,6 +65,7 @@ export const videoControllers = {
             availableResolutions: ["P144"]
         }
         db.videos.push(newVideo)
+        console.log(newVideo)
         res.status(201).json(newVideo)
     }),
 

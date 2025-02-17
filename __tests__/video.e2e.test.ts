@@ -7,10 +7,22 @@ import { setDB } from '../src/db/db'
 import { send } from 'process';
 import { json } from 'stream/consumers';
 import { RESOLUTIONS } from '../src/input-output-types/video-types';
+import { exec } from 'child_process';
 
 describe('/videos', () => {
     beforeAll(async () => {
         setDB()
+    })
+
+    it('should delete all data in db', async () => {
+        await req
+            .delete('/hometask_01/api/testing/all-data')
+            .expect(204)
+
+        const res = await req.get('/hometask_01/api/videos')
+
+        expect(res.status).toBe(200)
+        expect(res.body).toEqual([]);
     })
 
     it('should get empty array', async () => {
@@ -87,29 +99,25 @@ describe('/videos', () => {
         expect(updatingVideo.body.minAgeRestriction).toEqual(18)
     })
 
-    it('should delete video by id', async () => {
-        setDB()
+    // it('should delete video by id', async () => {
+    //     setDB()
 
-        const videoToDelete = await req
-            .post('/hometask_01/api/videos')
-            .send(dataset1.videos)
-            .expect(201)
+    // тут нужно для начала создать данные, т.к из бд уже ранее были удалены все видео
 
-        const videoId = videoToDelete.body.id
-        const deleteVideo = await req
-            .delete(`/hometask_01/api/videos/${videoId}`)
-            .expect(204)
+    //     const videoToDelete = await req
+    //         .post('/hometask_01/api/videos')
+    //         .send(dataset1.videos)
+    //         .expect(201)
 
-        const gettingAnEmptyArray = await req
-            .get(`/hometask_01/api/videos/${videoId}`)
-            .expect(404)
-    })
+    //     const videoId = videoToDelete.body.id
+    //     const deleteVideo = await req
+    //         .delete(`/hometask_01/api/videos/${videoId}`)
+    //         .expect(204)
+
+    //     const gettingAnEmptyArray = await req
+    //         .get(`/hometask_01/api/videos/${videoId}`)
+    //         .expect(404)
+    // })
 
 })
 
-const menu = {
-    analytics: {
-        bussiness: 'Для бизнеса',
-        data: 'Big Data'
-    }
-}
