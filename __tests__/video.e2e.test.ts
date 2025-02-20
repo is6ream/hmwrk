@@ -64,7 +64,6 @@ describe('/videos', () => {
             .post('/hometask_01/api/videos')
             .send(dataset1.videos)
             .set('Content-Type', 'application/json')
-            // .set('Content-Type', 'application/json')
             .expect(201)
     })
 

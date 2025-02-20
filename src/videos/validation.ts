@@ -42,8 +42,13 @@ export const putInputValidation = (video: InputVideoType) => {
     if (video.minAgeRestriction !== undefined && (typeof video.minAgeRestriction !== 'number' || video.minAgeRestriction < 1 || video.minAgeRestriction > 18)) {
         errors.errorsMessages.push({ message: "error!", field: "minAgeRestriction" })
     }
-    if (isNaN(Date.parse(video.publicationDate))) {
+    const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+    //остановился на том, что составил регулярное выражение по шаблону и проверяю входные данные. Без этой проверки была 1 ошибка, теперь 3
+    if (!video.publicationDate ||
+        typeof video.publicationDate !== 'string' || !video.publicationDate.match(iso8601Regex)) {
+        // 
         errors.errorsMessages.push({ message: "error!!!", field: "publicationDate" })
     }
     return errors;
 }
+
