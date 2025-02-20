@@ -14,7 +14,7 @@ export type QueryType = {
 }
 
 export type OutputErrorsType = {
-    errorMessages: {
+    errorsMessages: {
         message: string
         field: string
     }[]

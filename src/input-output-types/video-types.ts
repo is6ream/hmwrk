@@ -23,7 +23,12 @@ export type OutputVideoType = {
 }
 
 export type InputVideoType = {
+    id: number
     title: string
     author: string
+    canBeDownloaded: boolean
+    minAgeRestriction: null
+    createdAt: string
+    publicationDate: string
     availableResolutions: RESOLUTIONS[]
 }

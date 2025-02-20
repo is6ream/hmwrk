@@ -17,7 +17,7 @@ export const db: DBType = {
         publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
         availableResolutions: [
             "P144"
-        ]
+        ],
     }],
 }
 

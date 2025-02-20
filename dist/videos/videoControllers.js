@@ -3,25 +3,52 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.videoControllers = void 0;
 const db_1 = require("../db/db");
 const video_types_1 = require("../input-output-types/video-types");
+// const updateValidation = (video) => {
+//     const errors = {
+//         errorsMessages: []
+//     };
+//     if (!video.title || video.title.trim().length === 0 || typeof video.title !== "string" || video.title.length > 40) {
+//         errors.errorsMessages.push({ message: "error!!!", field: "title" });
+//     }
+//     if (!video.author || video.author.trim().length === 0 || typeof video.author !== "string" || video.author.length > 20) {
+//         errors.errorsMessages.push({ message: "error!!!", field: "author" });
+//     }
+//     if (!Array.isArray(video.availableResolutions) ||
+//         video.availableResolutions.find((p) => !video_types_1.RESOLUTIONS[p])) {
+//         errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" });
+//     }
+//     if (!video.canBeDownloaded || typeof video.canBeDownloaded !== "boolean") {
+//         errors.errorsMessages.push({ message: "error!!!", field: "canBeDownloaded" });
+//     }
+//     if (video.minAgeRestriction || typeof video.minAgeRestriction !== "number") {
+//         errors.errorsMessages.push({ message: "error!!!", field: "minAgeRestriction" });
+//     }
+//     if (!video.publicationDate || typeof video.publicationDate !== "string") {
+//         errors.errorsMessages.push({ message: "error!!!", field: "publicationDate" });
+//     }
+//     return errors;
+// }; Остановился тут
+
 const inputValidation = (video) => {
     const errors = {
-        errorMessages: []
+        errorsMessages: []
     };
     if (!video.title || video.title.trim().length === 0 || typeof video.title !== 'string' || video.title.length > 40) {
-        errors.errorMessages.push({ message: "invalid title", field: "title" });
+        errors.errorsMessages.push({ message: "error!!!", field: "title" });
     }
     if (!video.author || video.author.trim().length === 0 || typeof video.author !== 'string' || video.author.length > 20) {
-        errors.errorMessages.push({ message: "invalid author", field: "author" });
+        errors.errorsMessages.push({ message: "error!!!", field: "author" });
     }
     if (!Array.isArray(video.availableResolutions) ||
         video.availableResolutions.find((p) => !video_types_1.RESOLUTIONS[p])) {
-        errors.errorMessages.push({ message: "invalid resolutions", field: "resolutions" });
+        errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" });
         console.log(errors);
     }
     return errors;
 };
 exports.videoControllers = {
-    deleteVideosController: ((req, res) => {
+    deleteAllVideosController: ((req, res) => {
+        const videoId = +req.params.id;
         db_1.db.videos = [];
         res.status(204).send();
     }),
@@ -34,7 +61,7 @@ exports.videoControllers = {
     createVideoController: ((req, res) => {
         const errors = inputValidation(req.body);
         console.log("Ошибка валидации: ", errors);
-        if (errors.errorMessages.length) {
+        if (errors.errorsMessages.length) {
             res
                 .status(400)
                 .json(errors);
@@ -56,19 +83,37 @@ exports.videoControllers = {
         res.json(findVideo);
     }),
     updateVideoController: ((req, res) => {
-        let videoId = db_1.db.videos.find(v => v.id === +req.params.id);
-        if (videoId) {
-            videoId.title = req.body.title,
-                videoId.author = req.body.author,
-                videoId.availableResolutions = req.body.availableResolutions,
-                videoId.canBeDownloaded = req.body.canBeDownloaded,
-                videoId.minAgeRestriction = req.body.minAgeRestriction,
-                videoId.createdAt = req.body.createdAt,
-                videoId.publicationDate = req.body.publicationDate;
-            res.send(videoId);
+        var _a, _b;
+        const errors = updateValidation(req.body);
+        if (errors.errorsMessages.length) {
+            res
+                .status(400)
+                .json(errors);
         }
-        else {
-            res.send(404);
+        const videoId = +req.params.id;
+        const findVideo = db_1.db.videos.find(v => v.id === videoId);
+        if (!findVideo) {
+            res
+                .status(404)
+                .json({ message: 'Видео не найдено!' });
         }
+        findVideo.title = req.body.title || findVideo.title;
+        findVideo.author = req.body.author || findVideo.author;
+        findVideo.availableResolutions = req.body.availableResolutions || findVideo.availableResolutions;
+        findVideo.canBeDownloaded = (_a = req.body.canBeDownloaded) !== null && _a !== void 0 ? _a : findVideo.canBeDownloaded;
+        findVideo.minAgeRestriction = (_b = req.body.minAgeRestriction) !== null && _b !== void 0 ? _b : findVideo.minAgeRestriction;
+        findVideo.publicationDate = req.body.publicationDate || findVideo.publicationDate;
+        res.status(204).send();
+    }), //остановился на том, что данные, которые передаются в title undefined
+    deleteVideoController: ((req, res) => {
+        const videoId = +req.params.id;
+        const findVideo = db_1.db.videos.find(v => v.id === videoId);
+        if (!findVideo) {
+            res
+                .status(404)
+                .json({ message: 'Видео не найдено!' });
+        }
+        db_1.db.videos = db_1.db.videos.filter(v => v.id !== videoId);
+        res.status(204).send();
     })
 };

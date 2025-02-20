@@ -68,7 +68,7 @@ describe('/videos', () => {
             .expect(201)
     })
 
-    it('should update video ID', async () => {
+    it('should update video by ID', async () => {
         setDB()
 
         const res = await req
@@ -90,7 +90,7 @@ describe('/videos', () => {
                 minAgeRestriction: 18,
                 publicationDate: new Date().toISOString()
             })
-            .expect(200)
+            .expect(204)
 
         expect(updatingVideo.body.title).toEqual('good new title')
         expect(updatingVideo.body.author).toEqual('Jeff Bezos')

@@ -13,7 +13,7 @@ exports.db = {
             publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
             availableResolutions: [
                 "P144"
-            ]
+            ],
         }],
 };
 //Partial - это встроенный тип, который создает новый тип на основе типа DBType, делая все его свойства необязательными.

@@ -5,21 +5,48 @@ import { RESOLUTIONS, RESOLUTIONSstring } from "../input-output-types/video-type
 import { InputVideoType } from "../input-output-types/video-types";
 import { OutputErrorsType } from "./some";
 import { send } from 'process';
+import { error } from 'console';
 
-
-const inputValidation = (video: InputVideoType) => {
+const updateValidation = (video: InputVideoType) => {
     const errors: OutputErrorsType = {
-        errorMessages: []
+        errorsMessages: []
     }
-    if (!video.title || video.title.trim().length === 0 || typeof video.title !== 'string' || video.title.length > 40) {
-        errors.errorMessages.push({ message: "invalid title", field: "title" })
+    if (!video.title || video.title.trim().length === 0 || typeof video.title !== "string" || video.title.length > 40) {
+        errors.errorsMessages.push({ message: "error!!!", field: "title" })
     }
-    if (!video.author || video.author.trim().length === 0 || typeof video.author !== 'string' || video.author.length > 20) {
-        errors.errorMessages.push({ message: "invalid author", field: "author" })
+    if (!video.author || video.author.trim().length === 0 || typeof video.author !== "string" || video.author.length > 20) {
+        errors.errorsMessages.push({ message: "error!!!", field: "author" })
     }
     if (!Array.isArray(video.availableResolutions) ||
         video.availableResolutions.find((p: RESOLUTIONSstring) => !RESOLUTIONS[p as keyof typeof RESOLUTIONS])) {
-        errors.errorMessages.push({ message: "invalid resolutions", field: "resolutions" })
+        errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" })
+    }
+    if (!video.canBeDownloaded || typeof video.canBeDownloaded !== "boolean") {
+        errors.errorsMessages.push({ message: "error!!!", field: "canBeDownloaded" })
+    }
+    if (video.minAgeRestriction || typeof video.minAgeRestriction !== "number") {
+        errors.errorsMessages.push({ message: "error!!!", field: "minAgeRestriction" })
+    }
+    if (!video.publicationDate || typeof video.publicationDate !== "string") {
+        errors.errorsMessages.push({ message: "error!!!", field: "publicationDate" })
+    }
+    return errors;
+
+}
+
+const inputValidation = (video: InputVideoType) => {
+    const errors: OutputErrorsType = {
+        errorsMessages: []
+    }
+    if (!video.title || video.title.trim().length === 0 || typeof video.title !== 'string' || video.title.length > 40) {
+        errors.errorsMessages.push({ message: "error!!!", field: "title" })
+    }
+    if (!video.author || video.author.trim().length === 0 || typeof video.author !== 'string' || video.author.length > 20) {
+        errors.errorsMessages.push({ message: "error!!!", field: "author" })
+    }
+    if (!Array.isArray(video.availableResolutions) ||
+        video.availableResolutions.find((p: RESOLUTIONSstring) => !RESOLUTIONS[p as keyof typeof RESOLUTIONS])) {
+        errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" })
         console.log(errors)
     }
     return errors;
@@ -28,7 +55,8 @@ const inputValidation = (video: InputVideoType) => {
 
 export const videoControllers = {
 
-    deleteVideosController: ((req: Request, res: Response) => {
+    deleteAllVideosController: ((req: Request, res: Response) => {
+        const videoId = +req.params.id;
         db.videos = [];
         res.status(204).send()
     }),
@@ -44,7 +72,7 @@ export const videoControllers = {
     createVideoController: ((req: Request, res: Response) => {
         const errors = inputValidation(req.body)
         console.log("Ошибка валидации: ", errors)
-        if (errors.errorMessages.length) {
+        if (errors.errorsMessages.length) {
             res
                 .status(400)
                 .json(errors)
@@ -82,20 +110,40 @@ export const videoControllers = {
     }),
 
     updateVideoController: ((req: Request, res: Response) => {
-        let videoId = db.videos.find(v => v.id === + req.params.id)
-        if (videoId) {
-            videoId.title = req.body.title,
-                videoId.author = req.body.author,
-                videoId.availableResolutions = req.body.availableResolutions,
-                videoId.canBeDownloaded = req.body.canBeDownloaded,
-                videoId.minAgeRestriction = req.body.minAgeRestriction,
-                videoId.createdAt = req.body.createdAt,
-                videoId.publicationDate = req.body.publicationDate
+        const errors = updateValidation(req.body)
+        if (errors.errorsMessages.length) {
+            res
+                .status(400)
+                .json(errors)
 
-            res.send(videoId)
-        } else {
-            res.send(404)
         }
+        const videoId = +req.params.id;
+        const findVideo = db.videos.find(v => v.id === videoId);
+
+        if (!findVideo) {
+            res
+                .status(404)
+                .json({ message: 'Видео не найдено!' })
+        }
+        findVideo.title = req.body.title || findVideo.title
+        findVideo.author = req.body.author || findVideo.author
+        findVideo.availableResolutions = req.body.availableResolutions || findVideo.availableResolutions
+        findVideo.canBeDownloaded = req.body.canBeDownloaded ?? findVideo.canBeDownloaded
+        findVideo.minAgeRestriction = req.body.minAgeRestriction ?? findVideo.minAgeRestriction
+        findVideo.publicationDate = req.body.publicationDate || findVideo.publicationDate
+        res.status(204).send()
+    }), //остановился на том, что данные, которые передаются в title undefined
+
+    deleteVideoController: ((req: Request, res: Response) => {
+        const videoId: number = +req.params.id;
+        const findVideo = db.videos.find(v => v.id === videoId)
+        if (!findVideo) {
+            res
+                .status(404)
+                .json({ message: 'Видео не найдено!' });
+        }
+        db.videos = db.videos.filter(v => v.id !== videoId)
+        res.status(204).send()
     })
 };
 

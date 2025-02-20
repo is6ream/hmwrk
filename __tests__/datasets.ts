@@ -23,7 +23,6 @@ export const video2: any = {
     author: 'Danil',
     canBeDownloaded: true,
     minAgeRestriction: null,
-    createdAt: new Date().toISOString(),
     publicationDate: new Date().toISOString(),
     availableResolutions: [RESOLUTIONS.P2160]
 
