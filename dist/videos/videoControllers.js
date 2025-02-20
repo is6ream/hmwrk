@@ -2,50 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.videoControllers = void 0;
 const db_1 = require("../db/db");
-const video_types_1 = require("../input-output-types/video-types");
-// const updateValidation = (video) => {
-//     const errors = {
-//         errorsMessages: []
-//     };
-//     if (!video.title || video.title.trim().length === 0 || typeof video.title !== "string" || video.title.length > 40) {
-//         errors.errorsMessages.push({ message: "error!!!", field: "title" });
-//     }
-//     if (!video.author || video.author.trim().length === 0 || typeof video.author !== "string" || video.author.length > 20) {
-//         errors.errorsMessages.push({ message: "error!!!", field: "author" });
-//     }
-//     if (!Array.isArray(video.availableResolutions) ||
-//         video.availableResolutions.find((p) => !video_types_1.RESOLUTIONS[p])) {
-//         errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" });
-//     }
-//     if (!video.canBeDownloaded || typeof video.canBeDownloaded !== "boolean") {
-//         errors.errorsMessages.push({ message: "error!!!", field: "canBeDownloaded" });
-//     }
-//     if (video.minAgeRestriction || typeof video.minAgeRestriction !== "number") {
-//         errors.errorsMessages.push({ message: "error!!!", field: "minAgeRestriction" });
-//     }
-//     if (!video.publicationDate || typeof video.publicationDate !== "string") {
-//         errors.errorsMessages.push({ message: "error!!!", field: "publicationDate" });
-//     }
-//     return errors;
-// }; Остановился тут
-
-const inputValidation = (video) => {
-    const errors = {
-        errorsMessages: []
-    };
-    if (!video.title || video.title.trim().length === 0 || typeof video.title !== 'string' || video.title.length > 40) {
-        errors.errorsMessages.push({ message: "error!!!", field: "title" });
-    }
-    if (!video.author || video.author.trim().length === 0 || typeof video.author !== 'string' || video.author.length > 20) {
-        errors.errorsMessages.push({ message: "error!!!", field: "author" });
-    }
-    if (!Array.isArray(video.availableResolutions) ||
-        video.availableResolutions.find((p) => !video_types_1.RESOLUTIONS[p])) {
-        errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" });
-        console.log(errors);
-    }
-    return errors;
-};
+const validation_1 = require("./validation");
+const validation_2 = require("./validation");
 exports.videoControllers = {
     deleteAllVideosController: ((req, res) => {
         const videoId = +req.params.id;
@@ -59,7 +17,7 @@ exports.videoControllers = {
             .json(videos);
     }),
     createVideoController: ((req, res) => {
-        const errors = inputValidation(req.body);
+        const errors = (0, validation_1.inputValidation)(req.body);
         console.log("Ошибка валидации: ", errors);
         if (errors.errorsMessages.length) {
             res
@@ -84,7 +42,7 @@ exports.videoControllers = {
     }),
     updateVideoController: ((req, res) => {
         var _a, _b;
-        const errors = updateValidation(req.body);
+        const errors = (0, validation_2.putInputValidation)(req.body);
         if (errors.errorsMessages.length) {
             res
                 .status(400)

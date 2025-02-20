@@ -6,52 +6,8 @@ import { InputVideoType } from "../input-output-types/video-types";
 import { OutputErrorsType } from "./some";
 import { send } from 'process';
 import { error } from 'console';
-
-const updateValidation = (video: InputVideoType) => {
-    const errors: OutputErrorsType = {
-        errorsMessages: []
-    }
-    if (!video.title || video.title.trim().length === 0 || typeof video.title !== "string" || video.title.length > 40) {
-        errors.errorsMessages.push({ message: "error!!!", field: "title" })
-    }
-    if (!video.author || video.author.trim().length === 0 || typeof video.author !== "string" || video.author.length > 20) {
-        errors.errorsMessages.push({ message: "error!!!", field: "author" })
-    }
-    if (!Array.isArray(video.availableResolutions) ||
-        video.availableResolutions.find((p: RESOLUTIONSstring) => !RESOLUTIONS[p as keyof typeof RESOLUTIONS])) {
-        errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" })
-    }
-    if (!video.canBeDownloaded || typeof video.canBeDownloaded !== "boolean") {
-        errors.errorsMessages.push({ message: "error!!!", field: "canBeDownloaded" })
-    }
-    if (video.minAgeRestriction || typeof video.minAgeRestriction !== "number") {
-        errors.errorsMessages.push({ message: "error!!!", field: "minAgeRestriction" })
-    }
-    if (!video.publicationDate || typeof video.publicationDate !== "string") {
-        errors.errorsMessages.push({ message: "error!!!", field: "publicationDate" })
-    }
-    return errors;
-
-}
-
-const inputValidation = (video: InputVideoType) => {
-    const errors: OutputErrorsType = {
-        errorsMessages: []
-    }
-    if (!video.title || video.title.trim().length === 0 || typeof video.title !== 'string' || video.title.length > 40) {
-        errors.errorsMessages.push({ message: "error!!!", field: "title" })
-    }
-    if (!video.author || video.author.trim().length === 0 || typeof video.author !== 'string' || video.author.length > 20) {
-        errors.errorsMessages.push({ message: "error!!!", field: "author" })
-    }
-    if (!Array.isArray(video.availableResolutions) ||
-        video.availableResolutions.find((p: RESOLUTIONSstring) => !RESOLUTIONS[p as keyof typeof RESOLUTIONS])) {
-        errors.errorsMessages.push({ message: "error!!!", field: "availableResolutions" })
-        console.log(errors)
-    }
-    return errors;
-
-}
+import { inputValidation } from './validation';
+import { putInputValidation } from './validation';
 
 export const videoControllers = {
 
@@ -110,7 +66,7 @@ export const videoControllers = {
     }),
 
     updateVideoController: ((req: Request, res: Response) => {
-        const errors = updateValidation(req.body)
+        const errors = putInputValidation(req.body)
         if (errors.errorsMessages.length) {
             res
                 .status(400)
